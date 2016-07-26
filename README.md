@@ -1,5 +1,15 @@
 # Creating A Simple REST API with Python, Flask and Swagger
-A presentation about using Python and Flask to create a REST API, along with Swagger documenation
+
+This is a presentation about creating a simple REST API using Python, the Flask micro web framework and Swagger to provide documenation about the API. Our REST API will be serving a *simple* names data structure where the names are keyed to the last name, and any updates are marked as timestamp changes. This data could be backed to a database, saved in a file, accessible through some network protocol, but in our case is just an in-memory data structure. The purpose of the API is to decouple how the data exists from how it is used, and therefore hides the data implementation details.
+
+The API will present a simple **CRUD** interface that maps to HTTP methods like this:
+
+* Create -  POST
+* Read -    GET
+* Update -  PUT
+* Delete -  DELETE
+
+
 
 ```python
 # import Flask, the Python micro web framework
