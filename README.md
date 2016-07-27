@@ -161,7 +161,7 @@ Then we actually add some REST API functionality. The class *NamesList(Resource)
 
 Running this code the browser will display the **LIST_OF_NAMES** on the screen if we navigate to localhost:5000/api/names, and will look like this:
 
-```json
+```javascript
 [
     {
         "fname": "Ham", 
