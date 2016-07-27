@@ -363,7 +363,7 @@ I've added web application code to this version of the application in the form o
 
 ## Adding Swagger Documentation To The API
 
-Swagger is a specification for documenating a REST API with information and providing working examples. This is useful when using an API as a developer can "try the API out" without having to build a test harness application. This helps get a leg up on how the API works, what it expects and how the developer can make use of it.
+[Swagger](http://swagger.io/) is a specification for documenating a REST API with information and providing working examples. This is useful when using an API as a developer can "try the API out" without having to build a test harness application. This helps get a leg up on how the API works, what it expects and how the developer can make use of it.
 
 We can extend our application to provide Swagger documenation by making use of another module, called flask_restful_swagger. This gives functionality to inject our documenation into our REST API methods, and have the system process and use this documenation to meet the Swagger spec and display the documenation.
 
