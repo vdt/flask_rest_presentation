@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Application Home Page</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='materialize/css/materialize.min.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='presentation.css')}}">
+</head>
+<body>
+    <h3 class="presentation">
+        Application Home Page
+    </h3>
+
+    <!-- place the data here -->
+    <div id="names_list">
+        <table class="striped">
+            <thead>
+                <tr>
+                    <th>First Name</th>
+                    <th data-field="id">Last Name</th>
+                    <th data-field="id">Timestamp</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- edit the data here -->
+    <div id="name_editor">
+        <div class="input-field">
+            <input id="fname" type="text">
+            <label for="fname">First Name</label>
+        </div>
+        <div class="input-field">
+            <input id="lname" type="text">
+            <label for="lname">Lirst Name</label>
+        </div>
+        <div>
+            <button id="reset" class="waves-effect waves-light btn red lighten-2">Reset</button>
+            <button id="update" class="waves-effect waves-light btn blue lighten-1">Update</button>
+            <button id="create" class="waves-effect waves-light btn blue">Create</button>
+            <button id="delete" class="waves-effect waves-light btn red">Delete</button>
+        </div>
+    </div>
+
+    <!-- info panel -->
+    <div>
+
+    </div>
+
+    <script src="{{url_for('static', filename='jquery/jquery.min.js')}}"></script>
+    <script src="{{url_for('static', filename='materialize/js/materialize.min.js')}}"></script>
+    <script src="{{url_for('static', filename='handlebars/handlebars.min.js')}}"></script>
+    <script src="{{url_for('static', filename='presentation.js')}}"></script>
+</body>
+</html>
+
+
+<!-- handlebars template -->
+<script id="update_names_template" type="text/x-handlerbars-template">
+    {% raw %}
+    {{#each names_list}}
+    <tr>
+        <td class="fname">{{fname}}</td>
+        <td class="lname">{{lname}}</td>
+        <td>{{timestamp}}</td>
+    </tr>
+    {{/each}}
+    {% endraw %}
+</script>

@@ -1,0 +1,16 @@
+.presentation {
+    text-align: center;
+}
+
+#names_list {
+    margin: 10px 30px 10px 30px;
+}
+
+#name_editor {
+    margin: 30px 30px 10px 30px;
+    width: 50%;
+}
+
+#names_list tbody tr:hover {
+    background-color: #DFDFDF;
+}
