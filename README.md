@@ -158,7 +158,7 @@ Here we've added the make_response feature from flask, which we'll use to build 
 
 We then create our **LIST_OF_NAMES** data structure, a simple names database, keyed on the last name. This is a global variable so it's state persists between REST API calls.
 
-Then we actually add some REST API functionality. Then we essentially add a "hard coded" REST GET handler that will respond to "/api/names" with a list of names in a JSON structure. We map our "/api/names" path to a function called "get_names()". Inside the function we create a list of the names from our global structure. We then create a response object with the results of converting our list of names to a JSON string. We then modify the "Content-Type" header of the resopnse to "application/json" so the browser/caller will know the response is JSON data.
+Then we actually add some REST API functionality. Then we essentially add a "hard coded" REST GET handler that will respond to "/api/names" with a list of names in a JSON structure. We map our "/api/names" path to a function called "get_names()". Inside the function we create a list of the names from our global structure. A response object is created with the results of converting our list of names to a JSON string. The "Content-Type" header of the resopnse is modified to be "application/json" so the browser/caller will know the response is JSON data.
 
 Running this code the browser will display the **LIST_OF_NAMES** on the screen if we navigate to localhost:5000/api/names, and will look like this:
 
@@ -194,7 +194,7 @@ Running this code the browser will display the **LIST_OF_NAMES** on the screen i
 
 # Building Out Our Complete REST API
 
-We could keep building our API this way, adding functions and mapping them to routes within our application. However, it doesn't document our API in any way, add parameter checking, or any other things that might help move the API development along faster. This is where Swagger and the connexion module for Flask comes in.
+We could keep building our API this way, adding functions and mapping them to routes within our application. However, it doesn't document our API in any way, add parameter checking, or any other things that might help move the API development along faster. This is where (Swagger)[http://swagger.io/] and the (connexion)[https://github.com/zalando/connexion] module for Flask comes in.
 
 Building on our program we extend it to provide a complete REST API for the URL /api/names. This involves two steps. The class **NamesList** gets the additional REST method **post()**, and this completes this class. Notice that both get and post in this class respond to /api/names (no additional URL information). 
 
