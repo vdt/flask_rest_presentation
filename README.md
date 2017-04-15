@@ -194,11 +194,9 @@ Running this code the browser will display the **LIST_OF_NAMES** on the screen i
 
 # Building Out Our Complete REST API
 
-We could keep building our API this way, adding functions and mapping them to routes within our application. However, it doesn't document our API in any way, add parameter checking, or any other things that might help move the API development along faster. This is where (Swagger)[http://swagger.io/] and the (connexion)[https://github.com/zalando/connexion] module for Flask comes in.
+We could keep building our API this way, adding functions and mapping them to routes within our application. However, it doesn't document our API in any way, add parameter checking, or any other things that might help move the API development along faster. This is where [Swagger](http://swagger.io/) and the [connexion](https://github.com/zalando/connexion) module for Flask comes in.
 
-Building on our program we extend it to provide a complete REST API for the URL /api/names. This involves two steps. The class **NamesList** gets the additional REST method **post()**, and this completes this class. Notice that both get and post in this class respond to /api/names (no additional URL information). 
 
-To provide the complete REST API we need to also respond to /api/names/`<last_name>`, which will handle working with one name record in our data structure. We do this by creating another class **Names(Resource)**, which we map to /api/names/`<string:last_name>` with this line of code:
 
 ```python
 api.add_resource(Names, "/api/names/<string:last_name>")
