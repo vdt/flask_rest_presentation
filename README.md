@@ -1,6 +1,6 @@
 # Creating A Simple REST API with Python
 
-This presentation is about creating a simple HTTP REST API using Python, the Flask micro web framework and Swagger to provide documenation about the API. Our REST API will be serving a **simple** names data structure where the names are keyed to the last name, and any updates are marked as timestamp changes. This data could be implemented in a database, saved in a file, accessible through some network protocol, but in our case is just an in-memory data structure. One of the purposes of the API is to decouple how the data is represented from how it is used, and therefore hides the data implementation details.
+This presentation is about creating a simple HTTP REST API using Python 3, the Flask micro web framework and Swagger to provide documentation about the API. Our REST API will be serving a **simple** names data structure where the names are keyed to the last name, and any updates are marked as timestamp changes. This data could be implemented in a database, saved in a file, accessible through some network protocol, but in our case is just an in-memory data structure. One of the purposes of the API is to decouple how the data is represented from how it is used, and therefore hides the data implementation details.
 
 The API will present a simple **CRUD** interface that maps to standard HTTP methods like this:
 
@@ -11,7 +11,7 @@ The API will present a simple **CRUD** interface that maps to standard HTTP meth
 
 ## Let's Get Started
 
-First we'll create a simple web server using the Flask Micro Framework. The Python code below gets a very basic web server up and running, and responding with **Hello World** when a request for the home page comes in.
+First we'll create a simple web server using the Flask Micro Framework. The Python code below gets a very basic web server up and running, and responding with **Hello World** when a request for the home page comes in. This is code/version_1/presentation.py in the project.
 
 ```python
 # import Flask, the Python micro web framework
@@ -23,19 +23,25 @@ app = Flask(__name__)
 # create a URL route in our application for "/"
 @app.route('/')
 def hello_world():
+    """
+    This function just responds to the browser ULR
+    localhost:5000/
+
+    :return:        the string "Hello World!"
+    """
     return 'Hello World!'
+
 
 # if we're running in stand alone mode, run the application
 if __name__ == '__main__':
     app.run(debug=True)
-
 ```
 
-Nothing very exciting going on here. We import the Flask module, giving our application access to the Flask functionality. We then create a Flask application instance, the **app** variable. Next we connect a URL route to the **hello_world()** function. This connects an HTTP GET / request to the **hello_world()** function, the return value of which is sent back to the browser making the request. And lastly, we run the application, which starts the server and waits for requests to dispatch to known routes.
+Nothing very exciting going on here. We import the Flask module, giving our application access to the Flask functionality. We then create a Flask application instance, the **app** variable. Next we connect a URL route to the **hello_world()** function. This connects an HTTP GET / request to the **hello_world()** function, the return value of which is sent back to the browser making the request. And lastly, we run the application, which starts the server on port 5000 and waits for requests to dispatch to known routes.
 
 ## Let's Add Template Processing
 
-Let's make our web application a little more flexible by allowing it to process and deliver templates. This let's us serve an **index.html** file rather than having to include all the HTML in the Python application itself. Flask has this ability built in, so we'll modify our program to use this functionality.
+Let's make our web application a little more flexible by allowing it to process and deliver templates. This let's us serve an **index.html** file rather than having to include all the HTML in the Python application itself. Flask has this ability built in, so we'll modify our program to use this functionality. This code comes from code/version_2/pressentation.py in the project.
 
 ```python
 # import Flask, the Python micro web framework
@@ -48,10 +54,18 @@ from flask import (
 app = Flask(__name__,
             template_folder="templates")
 
+
 # create a URL route in our application for "/"
 @app.route('/')
 def hello_world():
+    """
+    This function just responds to the browser ULR
+    localhost:5000/
+
+    :return:        the rendered template "index.html"
+    """
     return render_template("index.html")
+
 
 # if we're running in stand alone mode, run the application
 if __name__ == '__main__':
@@ -60,115 +74,127 @@ if __name__ == '__main__':
 
 We've modified our code to include the additional Flask function **render_template**. We then modified our application creation by telling Flask where we're storing our template files. In this case in a new folder called **templates**, not very original, but certainly very clear.
 
-Now in our **hello_world()** function we change the code so rather than returning just the string "Hello World", it returns the results of calling **render_template("index.html")**. As you might guess, the **render_template()** function gets the file index.html from the templates folder, renders it, and returns it to the requesting browser. The index.html file is just a plain HTML file built to display "Hello World" on the browser.
+Now in our **hello_world()** function we change the code so rather than returning just the string "Hello World", it returns the results of calling **render_template("index.html")**. As you might guess, the **render_template()** function gets the file index.html from the templates folder, renders it, and returns it to the requesting browser. The index.html file is just a plain HTML file built to display "Hello World" in the browser.
 
-I added template processing to use later to display an example web application that uses the REST API we're about to build.
+I added template processing to use later to display an example web application using the REST API we're about to build.
 
 ## Adding a GET Request Handler
 
-Now let's add a REST GET request handler to our appliation. First we'll need some data to actually have our API serve, in this case it will be a simple in-memory data structure. We'll also make use of another Python module, called flask_restful, which makes it easy to create REST API systems in Python. Here's our modified code:
+Now let's add a REST request handler to our application that returns our list of names as a JSON structure. First we'll need some data to actually have our API serve, in this case it will be a simple in-memory data structure. This program comes from code/version_3/presentation.py Here's that modified code:
 
 ```python
 # import python module to create timestamp
 from datetime import datetime
+import json
 
 # import Flask, the Python micro web framework
 from flask import (
     Flask,
-    render_template
+    render_template,
+    make_response
 )
 
-# import the Flask API package
-from flask_restful import Resource, Api
 
 def get_timestamp():
     return datetime.now().strftime(("%Y-%m-%d %H:%M:%S"))
 
+
 # data to serve with our API
 LIST_OF_NAMES = {
     "Farrell": {"fname": "Doug", "lname": "Farrell", "timestamp": get_timestamp()},
-    "Murphy": {"fname": "Kevin", "lname": "Murphy", "timestamp": get_timestamp()},
+    "Murphy": {"fname": "Kent", "lname": "Brockman", "timestamp": get_timestamp()},
     "Easter": {"fname": "Bunny", "lname": "Easter", "timestamp": get_timestamp()},
     "Burglar": {"fname": "Ham", "lname": "Burglar", "timestamp": get_timestamp()},
     "Nye": {"fname": "Bill", "lname": "Nye", "timestamp": get_timestamp()}
 }
 
-class NamesList(Resource):
-    """
-    Our NameList API
-    """
-    def __init__(self):
-        self.names = LIST_OF_NAMES
-
-    def get(self):
-        """
-        Get the entire list of names
-        """
-        return [record for record in self.names.values()]
 
 # create the application instance
 app = Flask(__name__,
             template_folder="templates")
 
-# connect the flask restful system into the application
-api = Api(app)
-
-# connect our API class into the API processing connection
-api.add_resource(NamesList, "/api/names")
 
 # create a URL route in our application for "/"
 @app.route('/')
 def hello_world():
+    """
+    This function just responds to the browser ULR
+    localhost:5000/
+
+    :return:        the rendered template "index.html"
+    """
     return render_template("index.html")
+
+
+# create a URL route to our application for "/api/names"
+@app.route('/api/names')
+def get_names():
+    """
+    This function respones to a request for /api/names
+    with the complete lists of names
+
+    :return:        json string of list of names in dictionaries
+    """
+    # create the list of names from our data
+    names = []
+    for value in LIST_OF_NAMES.values():
+        names.append(value)
+
+    # create a response
+    rsp = make_response(json.dumps(names))
+
+    # tell the browser we're sending JSON data
+    rsp.headers.set('Content-Type', 'application/json')
+
+    return rsp
+
 
 # if we're running in stand alone mode, run the application
 if __name__ == '__main__':
     app.run(debug=True)
 ```
  
-Here we've added the flask_restful module, importing the particular functionality **Resource** and **Api**. We've also created the helper function **get_timestamp()** that generates a string respresenation of a current timestamp. This is used to create our in-memory structure, and to modify the data when we start modifying it with the API. 
+Here we've added the make_response feature from flask, which we'll use to build our REST response. We've also created the helper function **get_timestamp()** that generates a string representation of a current timestamp. This is used to create our in-memory structure, and to modify the data when we start modifying it with the API.
 
 We then create our **LIST_OF_NAMES** data structure, a simple names database, keyed on the last name. This is a global variable so it's state persists between REST API calls.
 
-Then we actually add some REST API functionality. The class **NamesList(Resource)** defines our REST API handler by inheriting from the Resource object we imported earlier. Our class only implements a GET handler to start with, which returns the entire **LIST_OF_NAMES** data structure. 
-
-We also chain the flask_restful **Api** functionality we imported earlier into the application instance variable **app**. This connects our API processing into the request handler so it can respond to routes, which we'll define next.
-
-Lastly we map our class **NamesList** to a route. This connects a class instance to the request processing, and will get called for GET /api/names
+Then we actually add some REST API functionality. Then we essentially add a "hard coded" REST GET handler that will respond to "/api/names" with a list of names in a JSON structure. We map our "/api/names" path to a function called "get_names()". Inside the function we create a list of the names from our global structure. We then create a response object with the results of converting our list of names to a JSON string. We then modify the "Content-Type" header of the resopnse to "application/json" so the browser/caller will know the response is JSON data.
 
 Running this code the browser will display the **LIST_OF_NAMES** on the screen if we navigate to localhost:5000/api/names, and will look like this:
 
 ```javascript
 [
     {
-        "fname": "Ham", 
-        "lname": "Burglar", 
+        "fname": "Ham",
+        "lname": "Burglar",
         "timestamp": "2016-07-27 11:42:38"
-    }, 
+    },
     {
-        "fname": "Doug", 
-        "lname": "Farrell", 
+        "fname": "Doug",
+        "lname": "Farrell",
         "timestamp": "2016-07-27 11:42:38"
-    }, 
+    },
     {
-        "fname": "Bunny", 
-        "lname": "Easter", 
+        "fname": "Bunny",
+        "lname": "Easter",
         "timestamp": "2016-07-27 11:42:38"
-    }, 
+    },
     {
-        "fname": "Kevin", 
-        "lname": "Murphy", 
+        "fname": "Kent",
+        "lname": "Brockman",
         "timestamp": "2016-07-27 11:42:38"
-    }, 
+    },
     {
-        "fname": "Bill", 
-        "lname": "Nye", 
+        "fname": "Bill",
+        "lname": "Nye",
         "timestamp": "2016-07-27 11:42:38"
     }
 ]
 ```
 
 # Building Out Our Complete REST API
+
+We could keep building our API this way, adding functions and mapping them to routes within our application. However, it doesn't document our API in any way, add parameter checking, or any other things that might help move the API development along faster. This is where Swagger and the connexion module for Flask comes in.
 
 Building on our program we extend it to provide a complete REST API for the URL /api/names. This involves two steps. The class **NamesList** gets the additional REST method **post()**, and this completes this class. Notice that both get and post in this class respond to /api/names (no additional URL information). 
 
